@@ -13,7 +13,7 @@ function DamagePingMod:RunHttpRequest()
 	end)
 end
 
--- Hook into PlayerDamage:damage_bullet for bullet damage taken
+-- Hook into PlayerDamage:damage_bullet to trigger a function when player is shot
 local original_damage_bullet = PlayerDamage.damage_bullet
 function PlayerDamage:damage_bullet(attack_data, ...)
     local result = original_damage_bullet(self, attack_data, ...)
@@ -21,7 +21,7 @@ function PlayerDamage:damage_bullet(attack_data, ...)
     -- Check if the player took damage and it's a new damage event
     if attack_data and attack_data.damage and attack_data.damage > 0 then
         local current_time = os.clock()
-        -- Only trigger if enough time has passed (cooldown) and damage is less than or equal to previous
+        -- Only trigger once within the cooldown
         if current_time - DamagePingMod.last_trigger_time >= DamagePingMod.cooldown and attack_data.damage <= DamagePingMod.last_damage then
             DamagePingMod:RunHttpRequest()
             DamagePingMod.last_trigger_time = current_time
@@ -35,7 +35,7 @@ function PlayerDamage:damage_bullet(attack_data, ...)
     return result
 end
 
--- Hook into PlayerDamage:damage_melee for melee damage taken
+-- Hook into PlayerDamage:damage_melee to trigger a function when player is meleed
 local original_damage_melee = PlayerDamage.damage_melee
 function PlayerDamage:damage_melee(attack_data, ...)
     local result = original_damage_melee(self, attack_data, ...)
@@ -43,7 +43,7 @@ function PlayerDamage:damage_melee(attack_data, ...)
     -- Check if the player took damage and it's a new damage event
     if attack_data and attack_data.damage and attack_data.damage > 0 then
         local current_time = os.clock()
-        -- Only trigger if enough time has passed (cooldown) and damage is less than or equal to previous
+        -- Only trigger once within the cooldown
         if current_time - DamagePingMod.last_trigger_time >= DamagePingMod.cooldown and attack_data.damage <= DamagePingMod.last_damage then
             DamagePingMod:RunHttpRequest()
             DamagePingMod.last_trigger_time = current_time
