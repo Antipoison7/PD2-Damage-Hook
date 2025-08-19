@@ -1,7 +1,11 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import datetime
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
 import json
 
 class MyHandler(BaseHTTPRequestHandler):
+    # Handle POST Requests
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
@@ -18,7 +22,20 @@ class MyHandler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
         self.wfile.write(b"POST request received successfully!")
+        
+    # Handle GET Requests
+    def do_GET(self):
+        print(f"Recieved GET request from IP: {self.client_address[0]}")
+        print(f"Time Recieved: {datetime.datetime.now()}")
+        print("VALUES:")
+        
+        parsed_url = urlparse(self.path)
+        captured_values = parse_qs(parsed_url.query)
 
+        for key in captured_values:
+            print(key, ":", captured_values[key])
+        print()
+        
 def run_server():
     server_address = ('localhost', 1327)
     httpd = HTTPServer(server_address, MyHandler)
