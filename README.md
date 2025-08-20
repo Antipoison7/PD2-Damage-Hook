@@ -5,7 +5,7 @@ A Payday 2 mod that allows for detecting incoming enemy damage and outputting a 
 - [Usage and Modification](#usage-and-modification)
 - [Standard Installation](#standard-installation)
 - [Installation from source](#installation-from-source)
-- [Damage Types](#damage-types)
+- [Damage Types](#damage-types--documentation)
 # Dependencies
 ## Client
 - [SuperBLT](https://superblt.znix.xyz/#installation)
@@ -47,73 +47,5 @@ python server.py
 ```bash
 python server.py
 ```
-# Damage Types
-## Damage Types Contents
-THIS SECTION IS A WORK IN PROGRESS, CHECK BACK LATER FOR A MORE DETAILED SECTION
-- [Getting Tased (damage_tase)](#playerdamagedamage_tase)
-- [Getting Shot (damage_bullet)](#playerdamagedamage_bullet)
-- [Getting Meleed (damage_melee)](#playerdamagedamage_melee)
-- [(damage_killzone)](#playerdamagedamage_killzone)
-- [(damage_fall)](#playerdamagedamage_fall)
-- [(damage_explosion)](#playerdamagedamage_explosiion)
-- [(damage_fire)](#playerdamagedamage_fire)
-- [(damage_fire_hit)](#playerdamagedamage_fire_hit)
-- [(damage_simple)](#playerdamagedamage_simple)
-## PlayerDamage.damage_tase
-## PlayerDamage.damage_bullet
-- Triggers on getting shot from a enemy
-```lua
--- Hook into PlayerDamage:damage_bullet to trigger a function when player is shot
-local original_damage_bullet = PlayerDamage.damage_bullet
-function PlayerDamage:damage_bullet(attack_data, ...)
-    local result = original_damage_bullet(self, attack_data, ...)
-    
-    -- Check if the player took damage and it's a new damage event
-    if attack_data and attack_data.damage and attack_data.damage > 0 then
-        local current_time = os.clock()
-        -- Only trigger once within the cooldown
-        if current_time - DamagePingMod.last_trigger_time >= DamagePingMod.cooldown and attack_data.damage <= DamagePingMod.last_damage then
-            DamagePingMod:RunHttpRequest()
-            DamagePingMod.last_trigger_time = current_time
-            DamagePingMod.last_damage = attack_data.damage
-        elseif attack_data.damage > DamagePingMod.last_damage then
-            -- Update last damage if current damage is higher (new damage event)
-            DamagePingMod.last_damage = attack_data.damage
-        end
-    end
-    
-    return result
-end
-```
-## PlayerDamage.damage_melee
-- Triggers on getting meleed by an enemey
-```lua
--- Hook into PlayerDamage:damage_melee to trigger a function when player is meleed
-local original_damage_melee = PlayerDamage.damage_melee
-function PlayerDamage:damage_melee(attack_data, ...)
-    local result = original_damage_melee(self, attack_data, ...)
-    
-    -- Check if the player took damage and it's a new damage event
-    if attack_data and attack_data.damage and attack_data.damage > 0 then
-        local current_time = os.clock()
-        -- Only trigger once within the cooldown
-        if current_time - DamagePingMod.last_trigger_time >= DamagePingMod.cooldown and attack_data.damage <= DamagePingMod.last_damage then
-            DamagePingMod:RunHttpRequest()
-            DamagePingMod.last_trigger_time = current_time
-            DamagePingMod.last_damage = attack_data.damage
-        elseif attack_data.damage > DamagePingMod.last_damage then
-            -- Update last damage if current damage is higher (new damage event)
-            DamagePingMod.last_damage = attack_data.damage
-        end
-    end
-    
-    return result
-end
-
-```
-## PlayerDamage.damage_killzone
-## PlayerDamage.damage_fall
-## PlayerDamage.damage_explosiion
-## PlayerDamage.damage_fire
-## PlayerDamage.damage_fire_hit
-## PlayerDamage.damage_simple
+# Damage Types / Documentation
+- Please see the [documentation / wiki](https://github.com/Antipoison7/PD2-Damage-Hook/wiki/Damage-Types)
