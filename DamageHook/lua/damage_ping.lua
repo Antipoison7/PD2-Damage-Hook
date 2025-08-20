@@ -3,7 +3,7 @@ if not _G.DamagePingMod then
     DamagePingMod.path = ModPath
     DamagePingMod.last_damage = 0
     DamagePingMod.last_trigger_time = 0
-    DamagePingMod.cooldown = 0.25 -- Cooldown to ensure not spamming the server, may drop damage if graced
+    DamagePingMod.cooldown = 0.3 -- Cooldown to ensure not spamming the server, may drop damage if graced
 end
 
 -- Function to ping the specified server using a get request
