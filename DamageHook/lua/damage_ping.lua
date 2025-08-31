@@ -7,23 +7,20 @@ end
 
 -- Function to ping the specified server using a get request
 function DamagePingMod:RunHttpRequest(attack_data, ...)
-    -- Check if the player took damage and it's a new damage event
-    if attack_data and attack_data.damage and attack_data.damage > 0 then
-        local current_time = os.clock()
-        -- Only trigger once within the cooldown
-        if current_time - DamagePingMod.last_trigger_time >= DamagePingMod.cooldown then
+    local current_time = os.clock()
+    -- Only trigger once within the cooldown
+    if current_time - DamagePingMod.last_trigger_time >= DamagePingMod.cooldown then
 
-            -- Please note, special characters need to be encoded using percentage encoding https://www.w3schools.com/tags/ref_urlencode.ASP
-            -- Example
-                -- "http://localhost:1327?chains=In%20A%20Pickle"
-            -- For further reference on passing information using GET, read https://www.w3schools.com/tags/ref_httpmethods.asp
-            dohttpreq("http://localhost:1327", function(data, id)
-                log("Retrieved server data:\n" .. data)
-            end)
+        -- Please note, special characters need to be encoded using percentage encoding https://www.w3schools.com/tags/ref_urlencode.ASP
+        -- Example
+            -- "http://localhost:1327?chains=In%20A%20Pickle"
+        -- For further reference on passing information using GET, read https://www.w3schools.com/tags/ref_httpmethods.asp
+        dohttpreq("http://localhost:1327", function(data, id)
+            log("Retrieved server data:\n" .. data)
+        end)
 
-            DamagePingMod.last_trigger_time = current_time
-            DamagePingMod.last_damage = attack_data.damage
-        end
+        DamagePingMod.last_trigger_time = current_time
+        DamagePingMod.last_damage = attack_data.damage
     end
 end
 
@@ -31,9 +28,9 @@ end
 local original_damage_bullet = PlayerDamage.damage_bullet
 function PlayerDamage:damage_bullet(attack_data, ...)
     local result = original_damage_bullet(self, attack_data, ...)
-    
+
     DamagePingMod:RunHttpRequest(attack_data)
-    
+
     return result
 end
 
@@ -41,8 +38,8 @@ end
 local original_damage_melee = PlayerDamage.damage_melee
 function PlayerDamage:damage_melee(attack_data, ...)
     local result = original_damage_melee(self, attack_data, ...)
-    
+
     DamagePingMod:RunHttpRequest(attack_data)
-    
+
     return result
 end
