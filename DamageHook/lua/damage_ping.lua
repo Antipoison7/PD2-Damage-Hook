@@ -15,7 +15,7 @@ function DamagePingMod:RunHttpRequest(attack_data, ...)
 
             -- Please note, special characters need to be encoded using percentage encoding https://www.w3schools.com/tags/ref_urlencode.ASP
             -- Example
-                -- "http://localhost:1327?chains=In%20A%20%Pickle"
+                -- "http://localhost:1327?chains=In%20A%20Pickle"
             -- For further reference on passing information using GET, read https://www.w3schools.com/tags/ref_httpmethods.asp
             dohttpreq("http://localhost:1327", function(data, id)
                 log("Retrieved server data:\n" .. data)
